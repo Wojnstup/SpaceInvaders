@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import time
 from bullet import Bullet
 from enemy import Enemy
 
@@ -12,6 +13,7 @@ from enemy import Enemy
 #<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 #<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
 
+
 def player_put():
     global playerX
     global playerY
@@ -20,8 +22,13 @@ def player_put():
 def calculate_distance(first_coor, second_coor):
     return math.sqrt( (first_coor[0]-second_coor[0])**2 + (first_coor[1]- second_coor[1])**2)
 
-
-
+def display_time():
+    global time_font
+    global time_display
+    global time_
+    time_ = time_font.render("Time: " + str(int(time_display)), True, (255,0,255))
+    screen.blit(time_, (10,10))
+    return
 
 def setup():
     global screen
@@ -40,7 +47,12 @@ def setup():
     global player_moving_right
     global game_won
     global gameoverscreen
+    global time_display
+    global time_start
+    global time_font
 
+    time_start = time.time()
+    time_display = 0
     #initializing the game
     pygame.init()
 
@@ -102,7 +114,15 @@ def game():
     global player_moving_left
     global player_moving_right
     global game_won
+    global time_display
+    global time_start
+    global time_font
+  
 
+    time_font = pygame.font.Font('freesansbold.ttf', 32)
+    time_display = time.time() - time_start
+   
+    #print(time_display)
     screen.fill((0,0,0))
     screen.blit(background, (0,0))
 
@@ -139,7 +159,7 @@ def game():
         screen.blit(gameoverscreen, (150, 50))
         pygame.display.update()
         return
-        
+
     #GAME WON!
     if game_won:
         bullets.clear()
@@ -147,7 +167,7 @@ def game():
         if not deleted_player:
             del player
             deleted_player = True
-        screen.blit(winscreen, (368, 268))
+        screen.blit(winscreen, (150, 50))
         pygame.display.update()
         return
 
@@ -201,7 +221,7 @@ def game():
                 except:
                     continue
             
-
+    display_time()
     pygame.display.update()
 
 if __name__ == "__main__":
